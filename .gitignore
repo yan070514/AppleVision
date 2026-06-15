@@ -6,3 +6,5 @@ Packages/
 DerivedData/
 Package.resolved
 .DS_Store
+Screenshot *.png
+main
