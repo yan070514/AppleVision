@@ -136,5 +136,5 @@ struct TrajectoryPoint: Codable {
 
 struct TrajectoryResult: Codable {
     let trajectory_id: Int
-    let points: [TrajectoryPoint]
+    var points: [TrajectoryPoint]
 }
