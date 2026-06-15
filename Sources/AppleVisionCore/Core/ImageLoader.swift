@@ -1,11 +1,11 @@
 import AppKit
 import Foundation
 
-enum ImageLoaderError: LocalizedError {
+public enum ImageLoaderError: LocalizedError {
     case fileNotFound(String)
     case invalidImage(String)
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .fileNotFound(let path):
             return "File not found: \(path)"
@@ -15,8 +15,8 @@ enum ImageLoaderError: LocalizedError {
     }
 }
 
-struct ImageLoader {
-    static func loadCGImage(from path: String) throws -> CGImage {
+public struct ImageLoader {
+    public static func loadCGImage(from path: String) throws -> CGImage {
         guard FileManager.default.fileExists(atPath: path) else {
             throw ImageLoaderError.fileNotFound(path)
         }

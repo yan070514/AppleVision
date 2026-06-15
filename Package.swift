@@ -10,16 +10,21 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.3.0"),
     ],
     targets: [
+        .target(
+            name: "AppleVisionCore",
+            path: "Sources/AppleVisionCore"
+        ),
         .executableTarget(
             name: "AppleVisionCLI",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "AppleVisionCore",
             ],
             path: "Sources/AppleVisionCLI"
         ),
-        .testTarget(
+        .executableTarget(
             name: "AppleVisionCLITests",
-            dependencies: ["AppleVisionCLI"],
+            dependencies: ["AppleVisionCore"],
             path: "Tests/AppleVisionCLITests"
         ),
     ]

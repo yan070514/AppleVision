@@ -1,10 +1,10 @@
 import Vision
 import Foundation
 
-enum VisionHandlerError: LocalizedError {
+public enum VisionHandlerError: LocalizedError {
     case visionError(String)
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .visionError(let msg):
             return "Vision error: \(msg)"
@@ -12,14 +12,14 @@ enum VisionHandlerError: LocalizedError {
     }
 }
 
-struct VisionHandler {
-    let cgImage: CGImage
+public struct VisionHandler {
+    public let cgImage: CGImage
 
-    init(cgImage: CGImage) {
+    public init(cgImage: CGImage) {
         self.cgImage = cgImage
     }
 
-    func perform(_ requests: [VNRequest]) throws {
+    public func perform(_ requests: [VNRequest]) throws {
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
         do {
             try handler.perform(requests)
@@ -29,7 +29,7 @@ struct VisionHandler {
     }
 
     /// Convert a Vision normalized rect (0-1) to pixel rect, flipping y-axis from bottom-left to top-left origin
-    static func pixelBBox(from boundingBox: CGRect, imageSize: CGSize) -> PixelBBox {
+    public static func pixelBBox(from boundingBox: CGRect, imageSize: CGSize) -> PixelBBox {
         let x = boundingBox.origin.x * imageSize.width
         let y = (1.0 - boundingBox.origin.y - boundingBox.height) * imageSize.height
         let w = boundingBox.width * imageSize.width
@@ -38,14 +38,14 @@ struct VisionHandler {
     }
 
     /// Convert a Vision normalized point (0-1) to pixel point, flipping y-axis
-    static func pixelPoint(from point: CGPoint, imageSize: CGSize) -> PixelPoint {
+    public static func pixelPoint(from point: CGPoint, imageSize: CGSize) -> PixelPoint {
         let x = point.x * imageSize.width
         let y = (1.0 - point.y) * imageSize.height
         return PixelPoint(x: x, y: y)
     }
 
     /// Convert VNRecognizedPoint to JointPoint (normalized 0-1 coords)
-    static func jointPoint(from point: VNRecognizedPoint) -> JointPoint {
+    public static func jointPoint(from point: VNRecognizedPoint) -> JointPoint {
         JointPoint(
             x: Double(point.x),
             y: Double(1.0 - point.y),
@@ -54,7 +54,7 @@ struct VisionHandler {
     }
 
     /// Convert VNRecognizedPoint to JointPoint in pixel coords
-    static func jointPointPixel(
+    public static func jointPointPixel(
         from point: VNRecognizedPoint,
         imageSize: CGSize
     ) -> JointPoint {

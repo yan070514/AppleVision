@@ -1,3 +1,4 @@
+import AppleVisionCore
 import ArgumentParser
 import Foundation
 import Vision

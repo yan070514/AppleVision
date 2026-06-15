@@ -1,11 +1,16 @@
-import Testing
+import AppleVisionCore
 import Foundation
 import Darwin
-@testable import AppleVisionCLI
 
-@Suite(.serialized) struct JSONOutputTests {
+struct TestResult: Codable {
+    let value: String
+}
 
-    @Test func testPrintResponseSuccess() {
+func runJSONOutputTests() {
+    TestRunner.suite("JSONOutput")
+
+    // Test: printResponse with success
+    do {
         let pipe = Pipe()
         let originalStdout = dup(STDOUT_FILENO)
         dup2(pipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
@@ -25,17 +30,17 @@ import Darwin
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8)!
 
-        #expect(output.contains("\"command\""))
-        #expect(output.contains("\"test-cmd\""))
-        // On some Foundation versions, nil optionals are encoded as null;
-        // on others they may be omitted entirely. Either is acceptable.
+        TestRunner.assert(output.contains("\"command\""), "Output should contain 'command' key")
+        TestRunner.assert(output.contains("\"test-cmd\""), "Output should contain command value")
         let hasNullError = output.contains("\"error\" : null")
         let hasNoError = !output.contains("\"error\"")
-        #expect(hasNullError || hasNoError)
-        #expect(output.contains("\"hello\""))
+        TestRunner.assert(hasNullError || hasNoError,
+                          "Output should not contain a non-null error key")
+        TestRunner.assert(output.contains("\"hello\""), "Output should contain result value")
     }
 
-    @Test func testPrintResponseError() {
+    // Test: printResponse with error
+    do {
         let pipe = Pipe()
         let originalStdout = dup(STDOUT_FILENO)
         dup2(pipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
@@ -55,10 +60,7 @@ import Darwin
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8)!
 
-        #expect(output.contains("Something went wrong"))
+        TestRunner.assert(output.contains("Something went wrong"),
+                           "Output should contain error message")
     }
-}
-
-struct TestResult: Codable {
-    let value: String
 }

@@ -1,13 +1,13 @@
 import Foundation
 
-enum JSONOutput {
+public enum JSONOutput {
     static let encoder: JSONEncoder = {
         let e = JSONEncoder()
         e.outputFormatting = [.prettyPrinted, .sortedKeys]
         return e
     }()
 
-    static func printResponse<T: Codable>(
+    public static func printResponse<T: Codable>(
         command: String,
         input: String,
         durationMs: Double,

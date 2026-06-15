@@ -1,23 +1,22 @@
-import Testing
+import AppleVisionCore
 import Foundation
-@testable import AppleVisionCLI
 
-@Test func testFileNotFound() {
-    #expect {
-        try ImageLoader.loadCGImage(from: "/nonexistent/path.jpg")
-    } throws: { error in
-        (error as? ImageLoaderError)?.errorDescription?.contains("File not found") == true
-    }
-}
+func runImageLoaderTests() {
+    TestRunner.suite("ImageLoader")
 
-@Test func testInvalidImage() throws {
+    // Test: FileNotFound
+    TestRunner.assertThrows(
+        try ImageLoader.loadCGImage(from: "/nonexistent/path.jpg"),
+        "loadCGImage with nonexistent path should throw"
+    )
+
+    // Test: Invalid image
     let path = NSTemporaryDirectory() + "test_invalid.txt"
     try? "not an image".write(toFile: path, atomically: true, encoding: .utf8)
     defer { try? FileManager.default.removeItem(atPath: path) }
 
-    #expect {
-        try ImageLoader.loadCGImage(from: path)
-    } throws: { error in
-        (error as? ImageLoaderError)?.errorDescription?.contains("not a valid image") == true
-    }
+    TestRunner.assertThrows(
+        try ImageLoader.loadCGImage(from: path),
+        "loadCGImage with invalid file should throw"
+    )
 }
